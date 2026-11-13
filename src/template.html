@@ -99,6 +99,25 @@ main{max-width:1000px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-le
 .foot details ol{margin:8px 0 0;padding-left:20px}
 .foot .copy{max-width:none;margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:13px}
 
+/* Report / suggest */
+.fbrow{display:flex;justify-content:center;margin:18px 0 0}
+.suggest{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:22px;padding:16px 18px;background:var(--panel);border:1px dashed var(--line);border-radius:var(--r)}
+.suggest p{margin:0;color:var(--muted);max-width:56ch}
+.suggest b{color:var(--ink)}
+dialog.fb{width:min(520px,calc(100vw - 32px));border:1px solid var(--line);border-radius:14px;padding:0;background:var(--panel);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog.fb::backdrop{background:rgba(10,12,18,.45)}
+dialog.fb form{display:flex;flex-direction:column;gap:12px;padding:20px}
+dialog.fb h2{font-size:19px}
+dialog.fb .sub{margin:-6px 0 0;font-size:13.5px;color:var(--muted)}
+dialog.fb label{display:flex;flex-direction:column;gap:5px;font-weight:600;font-size:14px}
+dialog.fb label span{font-weight:400;color:var(--muted);font-size:12.5px}
+dialog.fb textarea,dialog.fb input,dialog.fb select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;color:inherit}
+dialog.fb textarea{min-height:110px;resize:vertical}
+dialog.fb .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+dialog.fb .msg{font-size:13.5px}
+dialog.fb .msg.err{color:#c0392b}
+.hp{position:absolute;left:-9999px}
+
 /* Summary cover page (A4) */
 .cover{width:794px;height:1123px;padding:90px 80px;background:#fbfbf9;color:#1f2430;font-family:"Source Sans 3",sans-serif;display:flex;flex-direction:column}
 .cover[data-mode="dark"]{background:#191e29;color:#d9dee8}
@@ -119,7 +138,7 @@ main{max-width:1000px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-le
 @page{size:A4;margin:0}
 @media print{
   html,body{background:none!important}
-  .top,.bar,.pager,.hint,.foot,.head,.pickbar{display:none!important}
+  .top,.bar,.pager,.hint,.foot,.head,.pickbar,.fbrow,.suggest,dialog{display:none!important}
   main{padding:0!important;max-width:none!important}
   .sheetview{max-width:none!important}
   .paper{box-shadow:none!important;border-radius:0!important;overflow:hidden!important;width:794px!important;height:1122px!important;margin:0!important;break-after:page;page-break-after:always}
@@ -136,6 +155,10 @@ main{max-width:1000px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-le
   <button class="btn" id="themeBtn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><span>Theme</span></button>
 </header>
 <main id="app"></main>
+<!-- Netlify Forms reads these at deploy time; the dialog below posts to them -->
+<form name="report" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="course"><input name="sheet"><input name="page"><textarea name="message"></textarea><input name="email"><input name="bot-field"></form>
+<form name="suggestion" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="kind"><textarea name="message"></textarea><input name="email"><input name="bot-field"></form>
+<dialog class="fb" id="fb"><form method="dialog" id="fbForm"></form></dialog>
 
 <script>
 window.MathJax={loader:{load:['[tex]/html']},tex:{packages:{'[+]':['html']},inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'none'},startup:{typeset:false}};
@@ -166,7 +189,7 @@ function wireStars(after){document.querySelectorAll('[data-fav]').forEach(b=>b.o
 const FOOT=`<footer class="foot"><div class="cols">
  <section><h2>About Tabyeed Notes</h2><p>Tabyeed Notes turns class notes into one-page study sheets for freshman engineering courses, so you can review a whole lesson at a glance. It supports your studying; it doesn't replace your lectures, textbook or professor.</p>
   <details><summary>How to use it</summary><ol><li>Open a course and tap a sheet to read it.</li><li>Tap ☆ on a course to keep it at the top.</li><li>Tap <b>Combine sheets</b>, tick the lessons you need and give it a title to make one review.</li><li>Tap <b>Download PDF</b> and choose <b>Save as PDF</b> to keep a copy.</li></ol></details></section>
- <section><h2>Please note</h2><p><b>Always check the sheets against your lectures and textbook before an exam.</b> Sheets are made from student notes and can contain mistakes.</p><p>Not an official AUS service. Tabyeed doesn't collect any personal data: your favourite courses and theme are saved only on your own device.</p></section>
+ <section><h2>Please note</h2><p><b>Always check the sheets against your lectures and textbook before an exam.</b> Sheets are made from student notes and can contain mistakes.</p><p>Not an official AUS service. Tabyeed doesn't track you: your favourite courses and theme are saved only on your own device. Reports and suggestions you send are read only by the Tabyeed team, and your email is optional.</p></section>
  </div><p class="copy">© 2026 Tabyeed Notes. All rights reserved.</p></footer>`;
 const byLine=(c,s)=>(s&&s.by)||c.by||'';
 let cur=null, sheetMode=store.get('tn-sheet')||'', zoom=false, picking=null;
@@ -177,7 +200,9 @@ function home(){
   const fav=DATA.filter(c=>isFav(c.id)),rest=DATA.filter(c=>!isFav(c.id));
   $('#app').innerHTML=`<section class="hero"><div class="eyebrow">Freshman engineering courses</div><h1>Official study sheets</h1><p>One A4 page per lesson, made from class notes. ${total} sheets across ${DATA.length} courses. Tap ☆ to keep your courses at the top.</p></section>
   ${fav.length?`<h2 class="eyebrow sec">Your favourites</h2><div class="courses">${fav.map(card).join('')}</div><h2 class="eyebrow sec">All courses</h2>`:''}
-  <div class="courses">${rest.map(card).join('')}</div>${FOOT}`;
+  <div class="courses">${rest.map(card).join('')}</div>
+  <div class="suggest"><p><b>Have an idea?</b> Ask for a new course, a new format or a change to the site.</p><button class="btn primary" type="button" data-suggest>Suggest a change</button></div>${FOOT}`;
+  wireFeedback();
   wireStars(home);
 }
 function course(c){
@@ -231,14 +256,47 @@ function download(name){
   const back=()=>{document.title=old;removeEventListener('afterprint',back)};addEventListener('afterprint',back);
   window.print();setTimeout(back,4000);
 }
+/* Report a mistake / suggest a change: sent with Netlify Forms */
+function wireFeedback(){
+  document.querySelectorAll('[data-report]').forEach(b=>b.onclick=()=>{const [cid,i]=b.dataset.report.split('|');const c=DATA.find(x=>x.id===cid),s=c.sheets[+i];openFb('report',{course:c.code,sheet:`${s.label} ${s.title}`,page:location.href})});
+  document.querySelectorAll('[data-suggest]').forEach(b=>b.onclick=()=>openFb('suggestion',{}));
+}
+function openFb(kind,ctx){
+  const d=$('#fb'),f=$('#fbForm');
+  const report=kind==='report';
+  f.innerHTML=`<h2>${report?'Report a mistake':'Suggest a change'}</h2>
+   <p class="sub">${report?`${esc(ctx.course)} · ${esc(ctx.sheet)}`:'Tell us what would make Tabyeed better for you.'}</p>
+   ${report?'':`<label>What is it about?<select name="kind"><option>New course or sheets</option><option>New format (formula sheet, practice questions…)</option><option>A change to the site</option><option>Something else</option></select></label>`}
+   <label>${report?'What is wrong, and what should it say?':'Your suggestion'}<textarea name="message" required placeholder="${report?'e.g. In the Limit Comparison box, the condition should be 0 < L < ∞':'e.g. Please add MTH103 sheets'}"></textarea></label>
+   <label>Email <span>Optional, only if you want a reply</span><input type="email" name="email" autocomplete="email"></label>
+   <input class="hp" name="bot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+   <p class="msg" id="fbMsg" role="status"></p>
+   <div class="acts"><button class="btn" type="button" id="fbCancel">Cancel</button><button class="btn primary" type="submit" id="fbSend">Send</button></div>`;
+  $('#fbCancel').onclick=()=>d.close();
+  f.onsubmit=async e=>{
+    e.preventDefault();const fd=new FormData(f);
+    if(!String(fd.get('message')||'').trim()){$('#fbMsg').textContent='Please write a message first.';return}
+    const body=new URLSearchParams({'form-name':kind,...ctx});for(const [k,v] of fd)body.set(k,v);
+    const btn=$('#fbSend');btn.disabled=true;btn.textContent='Sending…';
+    try{
+      const r=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()});
+      if(!r.ok)throw new Error(r.status);
+      f.innerHTML=`<h2>Thank you</h2><p class="sub">${report?'We will check this sheet and fix it.':'We read every suggestion.'}</p><div class="acts"><button class="btn primary" type="button" id="fbDone">Close</button></div>`;
+      $('#fbDone').onclick=()=>d.close();
+    }catch(err){btn.disabled=false;btn.textContent='Send';$('#fbMsg').className='msg err';$('#fbMsg').textContent='It didn\'t send. Check your connection and try again.'}
+  };
+  d.showModal();f.querySelector('textarea').focus();
+}
+
 const PDFHINT=`<p class="hint">Download PDF opens your print window: choose <b>Save as PDF</b>. On iPhone, tap Share, then Save to Files.</p>`;
 
 async function sheet(c,i){
   const s=c.sheets[i],mode=modeOf(),prev=c.sheets[i-1],next=c.sheets[i+1];
   $('#app').innerHTML=`<div class="sheetview"><div class="bar"><div class="where"><div class="eyebrow"><a href="#/${c.id}">${esc(c.code)} sheets</a></div><b>${esc(s.title)}</b><span>${esc(s.label)} · ${i+1} of ${c.sheets.length}${byLine(c,s)?` · notes by ${esc(byLine(c,s))}`:''}</span></div>${toolbar(mode)}</div>${PDFHINT}
   <div id="pages"><div class="loading">Loading sheet…</div></div>
-  <div class="pager">${prev?`<a class="btn" href="#/${c.id}/${i}">‹ ${esc(prev.label)}</a>`:'<span></span>'}${next?`<a class="btn" href="#/${c.id}/${i+2}">${esc(next.label)} ›</a>`:'<span></span>'}</div>${FOOT}</div>`;
-  wireToolbar();
+  <div class="pager">${prev?`<a class="btn" href="#/${c.id}/${i}">‹ ${esc(prev.label)}</a>`:'<span></span>'}${next?`<a class="btn" href="#/${c.id}/${i+2}">${esc(next.label)} ›</a>`:'<span></span>'}</div>
+  <div class="fbrow"><button class="btn" type="button" data-report="${c.id}|${i}">⚑ Report a mistake on this sheet</button></div>${FOOT}</div>`;
+  wireToolbar();wireFeedback();
   const papers=[addPaper($('#pages'),buildSheet(c,s,mode))];
   if(await finish(papers,cur.token)){const b=$('#dlBtn');b.disabled=false;b.onclick=()=>download(`${c.code} ${s.label} ${s.title}`)}
 }
