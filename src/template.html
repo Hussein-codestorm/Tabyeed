@@ -95,9 +95,10 @@ main{max-width:1000px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-le
 .foot h2{font-size:16px;color:var(--ink);margin:0 0 8px}
 .foot p{margin:0 0 10px;max-width:62ch}
 .foot b{color:var(--ink)}
+.foot a{color:var(--accent);overflow-wrap:anywhere}
 .foot details summary{cursor:pointer;color:var(--ink);font-weight:600;margin-top:4px}
 .foot details ol{margin:8px 0 0;padding-left:20px}
-.foot .copy{max-width:none;margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:13px}
+.foot .copy{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 24px;max-width:none;margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:13px}
 
 /* Report / suggest */
 .fbrow{display:flex;justify-content:center;margin:18px 0 0}
@@ -190,7 +191,7 @@ const FOOT=`<footer class="foot"><div class="cols">
  <section><h2>About Tabyeed Notes</h2><p>Tabyeed Notes turns class notes into one-page study sheets for freshman engineering courses, so you can review a whole lesson at a glance. It supports your studying; it doesn't replace your lectures, textbook or professor.</p>
   <details><summary>How to use it</summary><ol><li>Open a course and tap a sheet to read it.</li><li>Tap ☆ on a course to keep it at the top.</li><li>Tap <b>Combine sheets</b>, tick the lessons you need and give it a title to make one review.</li><li>Tap <b>Download PDF</b> and choose <b>Save as PDF</b> to keep a copy.</li></ol></details></section>
  <section><h2>Please note</h2><p><b>Always check the sheets against your lectures and textbook before an exam.</b> Sheets are made from student notes and can contain mistakes.</p><p>Not an official AUS service. Tabyeed doesn't track you: your favourite courses and theme are saved only on your own device. Reports and suggestions you send are read only by the Tabyeed team, and your email is optional.</p></section>
- </div><p class="copy">© 2026 Tabyeed Notes. All rights reserved.</p></footer>`;
+ </div><p class="copy"><span>© 2026 Tabyeed Notes. All rights reserved.</span><span>Made by <b>Hussein Abdellatif</b> · <a href="mailto:hussein.moustafa.2030@gmail.com">hussein.moustafa.2030@gmail.com</a></span></p></footer>`;
 const byLine=(c,s)=>(s&&s.by)||c.by||'';
 let cur=null, sheetMode=store.get('tn-sheet')||'', zoom=false, picking=null;
 
