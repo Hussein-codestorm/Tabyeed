@@ -119,6 +119,9 @@ dialog.fb .msg{font-size:13.5px}
 dialog.fb .msg.err{color:#c0392b}
 .hp{position:absolute;left:-9999px}
 
+/* Watermark line at the bottom of every page */
+.sheet .wm{position:absolute;left:0;right:0;bottom:14px;text-align:center;font:500 8.5px/1 "Source Sans 3",sans-serif;letter-spacing:.04em;color:var(--s-muted);opacity:.75;pointer-events:none}
+
 /* Summary cover page (A4) */
 .cover{width:794px;height:1123px;padding:90px 80px;background:#fbfbf9;color:#1f2430;font-family:"Source Sans 3",sans-serif;display:flex;flex-direction:column}
 .cover[data-mode="dark"]{background:#191e29;color:#d9dee8}
@@ -382,6 +385,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=t=>t?new Date(t).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}):'';
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const WM='Tabyeed™ · All rights reserved · No unauthorized distribution';
 const STAR='<svg viewBox="0 0 24 24"><path d="M12 3.2l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 17l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/></svg>';
 const DL='<svg viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>';
 
@@ -439,7 +443,7 @@ function buildSheet(c,s,mode){
   const el=document.createElement('div');
   el.className='sheet';el.dataset.style=c.style;el.dataset.mode=mode;
   const meta=c.style==='physics'?s.label:`${c.code} · ${s.label}`;
-  el.innerHTML=`<header class="sh-head"><div class="sh-title">${esc(s.title)}</div><div class="sh-meta">${esc(meta)}</div></header><div class="sh-body">${s.html}</div><footer class="sh-foot"><span>${esc(c.code)} — ${esc(s.title)}</span><span>${esc(s.label)}</span></footer>`;
+  el.innerHTML=`<header class="sh-head"><div class="sh-title">${esc(s.title)}</div><div class="sh-meta">${esc(meta)}</div></header><div class="sh-body">${s.html}</div><footer class="sh-foot"><span>${esc(c.code)} — ${esc(s.title)}</span><span>${esc(s.label)}</span></footer><div class="wm">${WM}</div>`;
   return el;
 }
 function addPaper(host,el){
@@ -523,7 +527,7 @@ async function summary(c,idx,title){
   const cover=document.createElement('div');cover.className='cover';cover.dataset.mode=mode;
   cover.innerHTML=`<div class="c-eye">${esc(c.code)} · ${esc(c.name)}</div><h1>${esc(name)}</h1><p class="c-sub">${list.length} sheets, in course order. One page per sheet.</p>${c.by?`<p class="c-by">Notes by <b>${esc(c.by)}</b></p>`:''}
    <ol>${list.map((s,k)=>`<li><span class="l">${esc(s.label)}</span><span>${esc(s.title)}</span><span class="p">${k+2}</span></li>`).join('')}</ol>
-   <p class="c-foot">Tabyeed Notes · Student-made study notes. Always check them against your lectures and textbook.</p>`;
+   <p class="c-foot">${WM}</p>`;
   const papers=[addPaper(host,cover),...list.map(s=>addPaper(host,buildSheet(c,s,mode)))];
   if(await finish(papers,cur.token)){const b=$('#dlBtn');b.disabled=false;b.onclick=()=>download(`${c.code} ${name}`)}
 }
