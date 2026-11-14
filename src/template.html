@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tabyeed Notes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="One-page study sheets for freshman engineering courses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=Figtree:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#ffffff; --line:#e1e4ea; --ink:#171b23; --muted:#5f6776;
+  --accent:#2a46c4; --accent-ink:#ffffff; --accent-soft:#e9edfb; --star:#c98a00;
+  --f-ui:"Hanken Grotesk",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r:12px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101217; --panel:#171a21; --line:#2a2f3a; --ink:#e7e9ee; --muted:#9aa2b1;
+  --accent:#8fa2ff; --accent-ink:#0f1222; --accent-soft:#222a47; --star:#f2c14e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101217; --panel:#171a21; --line:#2a2f3a; --ink:#e7e9ee; --muted:#9aa2b1;
+  --accent:#8fa2ff; --accent-ink:#0f1222; --accent-soft:#222a47; --star:#f2c14e; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-ui);-webkit-text-size-adjust:100%}
+h1,h2,h3{text-wrap:balance;margin:0}
+button,input{font:inherit;color:inherit}
+a{color:inherit}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;padding:10px max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));padding-top:max(10px,env(safe-area-inset-top));background:var(--panel);border-bottom:1px solid var(--line)}
+.brand{font-weight:700;font-size:18px;letter-spacing:-.01em;text-decoration:none;display:flex;align-items:baseline;gap:8px}
+.brand small{font:500 11px var(--f-mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.spacer{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:500;text-decoration:none;white-space:nowrap;min-height:36px}
+.btn:hover{border-color:var(--muted)}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn:focus-visible,.course a:focus-visible,.item:focus-visible,.star:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{max-width:1000px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left)) 60px}
+.eyebrow{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hero h1{font-size:30px;letter-spacing:-.02em;margin:4px 0 6px}
+.hero p{color:var(--muted);margin:0 0 22px;max-width:60ch}
+.sec{margin:26px 0 10px}
+.courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.course{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.course:hover{border-color:var(--muted)}
+.course a{display:flex;flex-direction:column;gap:6px;text-decoration:none;padding:16px 52px 16px 18px;border-radius:var(--r)}
+.course .code{font:600 12px var(--f-mono);letter-spacing:.06em;color:var(--accent)}
+.course .nm{font-weight:700;font-size:18px}
+.course .m{font-size:13px;color:var(--muted)}
+.star{position:absolute;top:10px;right:10px;width:36px;height:36px;border:0;background:none;border-radius:8px;cursor:pointer;color:var(--muted);display:grid;place-items:center}
+.star:hover{background:var(--accent-soft)}
+.star svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+.star[aria-pressed="true"]{color:var(--star)}
+.star[aria-pressed="true"] svg{fill:currentColor}
+.head{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+.head h1{font-size:26px;letter-spacing:-.015em}
+.head .m{color:var(--muted);font-size:13.5px;margin-top:4px}
+.head .star{position:static}
+.by{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;margin-top:6px;padding:3px 10px;border-radius:999px;background:var(--accent-soft)}
+.list{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.item{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 16px;text-decoration:none;border-top:1px solid var(--line);cursor:pointer}
+.item:first-child{border-top:0}
+.item:hover{background:var(--accent-soft)}
+.item .lab{font:600 12px var(--f-mono);letter-spacing:.04em;color:var(--muted)}
+.item .tt{font-weight:600}
+.item .go{color:var(--muted)}
+.item input{width:18px;height:18px;margin:0;accent-color:var(--accent)}
+.picking .item{grid-template-columns:24px 110px minmax(0,1fr)}
+@media (max-width:560px){
+  .item{grid-template-columns:1fr auto;gap:2px 10px}.item .go{grid-column:2;grid-row:1/3}
+  .picking .item{grid-template-columns:24px 1fr}.picking .item input{grid-row:1/3}
+}
+.pickbar{position:sticky;bottom:0;z-index:4;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;padding:12px max(14px,env(safe-area-inset-left));padding-bottom:max(12px,env(safe-area-inset-bottom));background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 -6px 24px rgba(0,0,0,.08)}
+.pickbar input[type=text]{flex:1 1 200px;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-height:36px}
+.pickbar .n{font-size:13px;color:var(--muted)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:14px}
+.bar .where{flex:1 1 220px;min-width:0}
+.bar .where b{display:block;font-size:19px;line-height:1.25}
+.bar .where span{font-size:13px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--panel);padding:6px 12px;cursor:pointer;color:var(--muted);min-height:34px}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.sheetview{max-width:794px;margin:0 auto}
+.paper{width:100%;border-radius:6px;box-shadow:0 1px 0 var(--line),0 8px 30px rgba(0,0,0,.10);overflow:hidden;background:var(--panel);margin-bottom:16px}
+.paper.zoom{overflow:auto;-webkit-overflow-scrolling:touch}
+.paper .scaler{transform-origin:0 0;width:794px}
+.loading{padding:40px;text-align:center;color:var(--muted)}
+.pager{display:flex;justify-content:space-between;gap:8px;margin-top:2px}
+.pager .btn{max-width:48%;overflow:hidden;text-overflow:ellipsis}
+.hint{font-size:12.5px;color:var(--muted);margin:-6px 0 12px}
+.foot{margin-top:48px;border-top:1px solid var(--line);padding-top:24px;font-size:14px;line-height:1.6;color:var(--muted)}
+.foot .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px 48px}
+.foot h2{font-size:16px;color:var(--ink);margin:0 0 8px}
+.foot p{margin:0 0 10px;max-width:62ch}
+.foot b{color:var(--ink)}
+.foot a{color:var(--accent);overflow-wrap:anywhere}
+.foot details summary{cursor:pointer;color:var(--ink);font-weight:600;margin-top:4px}
+.foot details ol{margin:8px 0 0;padding-left:20px}
+.foot .copy{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 24px;max-width:none;margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:13px}
+
+/* Report / suggest */
+.fbrow{display:flex;justify-content:center;margin:18px 0 0}
+.suggest{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:22px;padding:16px 18px;background:var(--panel);border:1px dashed var(--line);border-radius:var(--r)}
+.suggest p{margin:0;color:var(--muted);max-width:56ch}
+.suggest b{color:var(--ink)}
+dialog.fb{width:min(520px,calc(100vw - 32px));border:1px solid var(--line);border-radius:14px;padding:0;background:var(--panel);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog.fb::backdrop{background:rgba(10,12,18,.45)}
+dialog.fb form{display:flex;flex-direction:column;gap:12px;padding:20px}
+dialog.fb h2{font-size:19px}
+dialog.fb .sub{margin:-6px 0 0;font-size:13.5px;color:var(--muted)}
+dialog.fb label{display:flex;flex-direction:column;gap:5px;font-weight:600;font-size:14px}
+dialog.fb label span{font-weight:400;color:var(--muted);font-size:12.5px}
+dialog.fb textarea,dialog.fb input,dialog.fb select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;color:inherit}
+dialog.fb textarea{min-height:110px;resize:vertical}
+dialog.fb .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+dialog.fb .msg{font-size:13.5px}
+dialog.fb .msg.err{color:#c0392b}
+.hp{position:absolute;left:-9999px}
+
+/* Watermark line at the bottom of every page */
+.sheet .wm{position:absolute;left:0;right:0;bottom:14px;text-align:center;font:500 8.5px/1 "Source Sans 3",sans-serif;letter-spacing:.04em;color:var(--s-muted);opacity:.75;pointer-events:none}
+
+/* Summary cover page (A4) */
+.cover{width:794px;height:1123px;padding:90px 80px;background:#fbfbf9;color:#1f2430;font-family:"Source Sans 3",sans-serif;display:flex;flex-direction:column}
+.cover[data-mode="dark"]{background:#191e29;color:#d9dee8}
+.cover .c-eye{font:600 13px "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+.cover h1{font:700 44px/1.1 "Source Serif 4",Georgia,serif;margin:14px 0 10px;color:#1f3a80}
+.cover[data-mode="dark"] h1{color:#a9c3ff}
+.cover .c-sub{font-size:17px;opacity:.75;margin:0 0 8px}
+.cover .c-by{font-size:15px;margin:0 0 40px}
+.cover ol{list-style:none;margin:0;padding:24px 0 0;border-top:2px solid currentColor}
+.cover li{display:grid;grid-template-columns:120px 1fr 40px;gap:14px;padding:10px 0;border-bottom:1px solid rgba(127,127,127,.3);font-size:16px}
+.cover li .l{font:600 13px "IBM Plex Mono",monospace;opacity:.7;padding-top:2px}
+.cover li .p{text-align:right;opacity:.7}
+.cover .c-foot{margin-top:auto;font-size:12px;opacity:.6}
+
+/*SHEETCSS*/
+
+/* Print = Download PDF: one sheet per A4 page, nothing else */
+@page{size:A4;margin:0}
+@media print{
+  html,body{background:none!important}
+  .top,.bar,.pager,.hint,.foot,.head,.pickbar,.fbrow,.suggest,dialog{display:none!important}
+  main{padding:0!important;max-width:none!important}
+  .sheetview{max-width:none!important}
+  .paper{box-shadow:none!important;border-radius:0!important;overflow:hidden!important;width:794px!important;height:1122px!important;margin:0!important;break-after:page;page-break-after:always}
+  .paper:last-of-type{break-after:auto;page-break-after:auto}
+  .paper .scaler{transform:none!important}
+  .sheet,.cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#/">Tabyeed <small>Notes</small></a>
+  <span class="spacer"></span>
+  <button class="btn" id="themeBtn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg><span>Theme</span></button>
+</header>
+<main id="app"></main>
+<!-- Netlify Forms reads these at deploy time; the dialog below posts to them -->
+<form name="report" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="course"><input name="sheet"><input name="page"><textarea name="message"></textarea><input name="email"><input name="bot-field"></form>
+<form name="suggestion" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="kind"><textarea name="message"></textarea><input name="email"><input name="bot-field"></form>
+<dialog class="fb" id="fb"><form method="dialog" id="fbForm"></form></dialog>
+
+<script>
+window.MathJax={loader:{load:['[tex]/html']},tex:{packages:{'[+]':['html']},inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'none'},startup:{typeset:false}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<script>
+const DATA="__DATA__";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate=t=>t?new Date(t).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}):'';
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const WM='© Tabyeed · All rights reserved · No unauthorized distribution';
+const STAR='<svg viewBox="0 0 24 24"><path d="M12 3.2l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 17l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/></svg>';
+const DL='<svg viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>';
+
+/* Page theme */
+function applyTheme(t){if(t)document.documentElement.dataset.theme=t;else delete document.documentElement.dataset.theme}
+applyTheme(store.get('tn-theme'));
+const isDark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches};
+$('#themeBtn').onclick=()=>{const t=isDark()?'light':'dark';applyTheme(t);store.set('tn-theme',t);if(cur)render()};
+
+/* Favourite courses, kept on this device */
+let favs=[];try{favs=JSON.parse(store.get('tn-favs')||'[]')}catch(e){}
+const isFav=id=>favs.includes(id);
+function toggleFav(id){favs=isFav(id)?favs.filter(x=>x!==id):[...favs,id];store.set('tn-favs',JSON.stringify(favs))}
+const starBtn=c=>`<button class="star" type="button" data-fav="${c.id}" aria-pressed="${isFav(c.id)}" aria-label="${isFav(c.id)?'Remove from':'Add to'} favourites: ${esc(c.code)}" title="${isFav(c.id)?'Remove from favourites':'Add to favourites'}">${STAR}</button>`;
+function wireStars(after){document.querySelectorAll('[data-fav]').forEach(b=>b.onclick=e=>{e.preventDefault();toggleFav(b.dataset.fav);after()})}
+
+const FOOT=`<footer class="foot"><div class="cols">
+ <section><h2>About Tabyeed Notes</h2><p>Tabyeed Notes turns class notes into one-page study sheets for freshman engineering courses, so you can review a whole lesson at a glance. It supports your studying; it doesn't replace your lectures, textbook or professor.</p>
+  <details><summary>How to use it</summary><ol><li>Open a course and tap a sheet to read it.</li><li>Tap ☆ on a course to keep it at the top.</li><li>Tap <b>Combine sheets</b>, tick the lessons you need and give it a title to make one review.</li><li>Tap <b>Download PDF</b> and choose <b>Save as PDF</b> to keep a copy.</li></ol></details></section>
+ <section><h2>Please note</h2><p><b>Always check the sheets against your lectures and textbook before an exam.</b> Sheets are made from student notes and can contain mistakes.</p><p>Not an official AUS service. Tabyeed doesn't track you: your favourite courses and theme are saved only on your own device. Reports and suggestions you send are read only by the Tabyeed team, and your email is optional.</p></section>
+ </div><p class="copy"><span>© Tabyeed Notes. All rights reserved.</span><span>Hussein Abdellatif · <a href="mailto:hussein.moustafa.2030@gmail.com">hussein.moustafa.2030@gmail.com</a></span></p></footer>`;
+const byLine=(c,s)=>(s&&s.by)||c.by||'';
+let cur=null, sheetMode=store.get('tn-sheet')||'', zoom=false, picking=null;
+
+function home(){
+  const total=DATA.reduce((n,c)=>n+c.sheets.length,0);
+  const card=c=>`<div class="course"><a href="#/${c.id}"><span class="code">${esc(c.code)}</span><span class="nm">${esc(c.name)}</span><span class="m">${c.sheets.length} sheets${c.by?` · by ${esc(c.by)}`:''}</span><span class="m">Updated ${fmtDate(c.at)}</span></a>${starBtn(c)}</div>`;
+  const fav=DATA.filter(c=>isFav(c.id)),rest=DATA.filter(c=>!isFav(c.id));
+  $('#app').innerHTML=`<section class="hero"><div class="eyebrow">Freshman engineering courses</div><h1>Official study sheets</h1><p>One A4 page per lesson, made from class notes. ${total} sheets across ${DATA.length} courses. Tap ☆ to keep your courses at the top.</p></section>
+  ${fav.length?`<h2 class="eyebrow sec">Your favourites</h2><div class="courses">${fav.map(card).join('')}</div><h2 class="eyebrow sec">All courses</h2>`:''}
+  <div class="courses">${rest.map(card).join('')}</div>
+  <div class="suggest"><p><b>Have an idea?</b> Ask for a new course, a new format or a change to the site.</p><button class="btn primary" type="button" data-suggest>Suggest a change</button></div>${FOOT}`;
+  wireFeedback();
+  wireStars(home);
+}
+function course(c){
+  const pk=picking&&picking.id===c.id?picking:null;
+  $('#app').innerHTML=`<div class="head"><div><div class="eyebrow"><a href="#/">All courses</a></div><h1>${esc(c.code)} · ${esc(c.name)}</h1><div class="m">${c.sheets.length} sheets, in course order · updated ${fmtDate(c.at)}</div>${c.by?`<div class="by">Notes by <b>${esc(c.by)}</b></div>`:''}</div>
+   <div class="row" style="display:flex;gap:8px;align-items:center">${starBtn(c)}${pk?`<button class="btn" type="button" id="pickCancel">Cancel</button>`:`<button class="btn primary" type="button" id="pickStart">Combine sheets</button>`}</div></div>
+  <nav class="list${pk?' picking':''}">${c.sheets.map((s,i)=>pk
+    ?`<label class="item"><input type="checkbox" data-i="${i}" ${pk.sel.has(i)?'checked':''}><span class="lab">${esc(s.label)}</span><span class="tt">${esc(s.title)}</span></label>`
+    :`<a class="item" href="#/${c.id}/${i+1}"><span class="lab">${esc(s.label)}</span><span class="tt">${esc(s.title)}</span><span class="go" aria-hidden="true">›</span></a>`).join('')}</nav>
+  ${pk?`<div class="pickbar"><button class="btn" type="button" id="pickAll">${pk.sel.size===c.sheets.length?'Clear all':'Select all'}</button><input type="text" id="pickTitle" placeholder="Summary title, e.g. Midterm 2 review" value="${esc(pk.title)}" aria-label="Summary title"><span class="n">${pk.sel.size} selected</span><button class="btn primary" type="button" id="pickGo" ${pk.sel.size?'':'disabled'}>Make summary</button></div>`:''}
+  ${FOOT}`;
+  wireStars(()=>course(c));
+  if(!pk){$('#pickStart').onclick=()=>{picking={id:c.id,sel:new Set(),title:''};course(c)};return}
+  $('#pickCancel').onclick=()=>{picking=null;course(c)};
+  $('#pickTitle').oninput=e=>{pk.title=e.target.value};
+  document.querySelectorAll('.picking input[type=checkbox]').forEach(x=>x.onchange=()=>{const i=+x.dataset.i;x.checked?pk.sel.add(i):pk.sel.delete(i);const y=scrollY;course(c);scrollTo(0,y)});
+  $('#pickAll').onclick=()=>{pk.sel=pk.sel.size===c.sheets.length?new Set():new Set(c.sheets.map((_,i)=>i));const y=scrollY;course(c);scrollTo(0,y)};
+  $('#pickGo').onclick=()=>{const ids=[...pk.sel].sort((a,b)=>a-b).map(i=>i+1).join('.');const t=pk.title.trim();picking=null;location.hash=`#/${c.id}/summary/${ids}${t?'/'+encodeURIComponent(t):''}`};
+}
+
+function buildSheet(c,s,mode){
+  const el=document.createElement('div');
+  el.className='sheet';el.dataset.style=c.style;el.dataset.mode=mode;
+  const meta=c.style==='physics'?s.label:`${c.code} · ${s.label}`;
+  el.innerHTML=`<header class="sh-head"><div class="sh-title">${esc(s.title)}</div><div class="sh-meta">${esc(meta)}</div></header><div class="sh-body">${s.html}</div><footer class="sh-foot"><span>${esc(c.code)} — ${esc(s.title)}</span><span>${esc(s.label)}</span></footer><div class="wm">${WM}</div>`;
+  return el;
+}
+function addPaper(host,el){
+  const paper=document.createElement('div');paper.className='paper'+(zoom?' zoom':'');
+  const scaler=document.createElement('div');scaler.className='scaler';scaler.style.visibility='hidden';
+  scaler.appendChild(el);paper.appendChild(scaler);host.appendChild(paper);return paper;
+}
+async function finish(papers,token){
+  try{await MathJax.startup.promise;await MathJax.typesetPromise(papers.map(p=>p.querySelector('.scaler')))}catch(e){}
+  try{await document.fonts.ready}catch(e){}
+  if(token!==cur.token)return false;
+  for(const p of papers){const el=p.querySelector('.sheet');if(el)fitSheet(el);p.querySelector('.scaler').style.visibility=''}
+  document.querySelectorAll('.loading').forEach(x=>x.remove());
+  layout();return true;
+}
+const modeOf=()=>sheetMode||(isDark()?'dark':'light');
+const toolbar=(mode)=>`<div class="seg" role="group" aria-label="Sheet colours"><button type="button" data-m="light" aria-pressed="${mode==='light'}">Light</button><button type="button" data-m="dark" aria-pressed="${mode==='dark'}">Dark</button></div>
+   <button class="btn" type="button" id="zoomBtn" aria-pressed="${zoom}">${zoom?'Fit to screen':'Full size'}</button>
+   <button class="btn primary" type="button" id="dlBtn" disabled>${DL}Download PDF</button>`;
+function wireToolbar(){
+  document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{sheetMode=b.dataset.m;store.set('tn-sheet',sheetMode);render()});
+  $('#zoomBtn').onclick=()=>{zoom=!zoom;document.querySelectorAll('.paper').forEach(p=>p.classList.toggle('zoom',zoom));$('#zoomBtn').textContent=zoom?'Fit to screen':'Full size';$('#zoomBtn').setAttribute('aria-pressed',zoom);layout()};
+}
+function download(name){
+  const old=document.title;document.title=name;
+  const back=()=>{document.title=old;removeEventListener('afterprint',back)};addEventListener('afterprint',back);
+  window.print();setTimeout(back,4000);
+}
+/* Report a mistake / suggest a change: sent with Netlify Forms */
+function wireFeedback(){
+  document.querySelectorAll('[data-report]').forEach(b=>b.onclick=()=>{const [cid,i]=b.dataset.report.split('|');const c=DATA.find(x=>x.id===cid),s=c.sheets[+i];openFb('report',{course:c.code,sheet:`${s.label} ${s.title}`,page:location.href})});
+  document.querySelectorAll('[data-suggest]').forEach(b=>b.onclick=()=>openFb('suggestion',{}));
+}
+function openFb(kind,ctx){
+  const d=$('#fb'),f=$('#fbForm');
+  const report=kind==='report';
+  f.innerHTML=`<h2>${report?'Report a mistake':'Suggest a change'}</h2>
+   <p class="sub">${report?`${esc(ctx.course)} · ${esc(ctx.sheet)}`:'Tell us what would make Tabyeed better for you.'}</p>
+   ${report?'':`<label>What is it about?<select name="kind"><option>New course or sheets</option><option>New format (formula sheet, practice questions…)</option><option>A change to the site</option><option>Something else</option></select></label>`}
+   <label>${report?'What is wrong, and what should it say?':'Your suggestion'}<textarea name="message" required placeholder="${report?'e.g. In the Limit Comparison box, the condition should be 0 < L < ∞':'e.g. Please add MTH103 sheets'}"></textarea></label>
+   <label>Email <span>Optional, only if you want a reply</span><input type="email" name="email" autocomplete="email"></label>
+   <input class="hp" name="bot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+   <p class="msg" id="fbMsg" role="status"></p>
+   <div class="acts"><button class="btn" type="button" id="fbCancel">Cancel</button><button class="btn primary" type="submit" id="fbSend">Send</button></div>`;
+  $('#fbCancel').onclick=()=>d.close();
+  f.onsubmit=async e=>{
+    e.preventDefault();const fd=new FormData(f);
+    if(!String(fd.get('message')||'').trim()){$('#fbMsg').textContent='Please write a message first.';return}
+    const body=new URLSearchParams({'form-name':kind,...ctx});for(const [k,v] of fd)body.set(k,v);
+    const btn=$('#fbSend');btn.disabled=true;btn.textContent='Sending…';
+    try{
+      const r=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()});
+      if(!r.ok)throw new Error(r.status);
+      f.innerHTML=`<h2>Thank you</h2><p class="sub">${report?'We will check this sheet and fix it.':'We read every suggestion.'}</p><div class="acts"><button class="btn primary" type="button" id="fbDone">Close</button></div>`;
+      $('#fbDone').onclick=()=>d.close();
+    }catch(err){btn.disabled=false;btn.textContent='Send';$('#fbMsg').className='msg err';$('#fbMsg').textContent='It didn\'t send. Check your connection and try again.'}
+  };
+  d.showModal();f.querySelector('textarea').focus();
+}
+
+const PDFHINT=`<p class="hint">Download PDF opens your print window: choose <b>Save as PDF</b>. On iPhone, tap Share, then Save to Files.</p>`;
+
+async function sheet(c,i){
+  const s=c.sheets[i],mode=modeOf(),prev=c.sheets[i-1],next=c.sheets[i+1];
+  $('#app').innerHTML=`<div class="sheetview"><div class="bar"><div class="where"><div class="eyebrow"><a href="#/${c.id}">${esc(c.code)} sheets</a></div><b>${esc(s.title)}</b><span>${esc(s.label)} · ${i+1} of ${c.sheets.length}${byLine(c,s)?` · notes by ${esc(byLine(c,s))}`:''}</span></div>${toolbar(mode)}</div>${PDFHINT}
+  <div id="pages"><div class="loading">Loading sheet…</div></div>
+  <div class="pager">${prev?`<a class="btn" href="#/${c.id}/${i}">‹ ${esc(prev.label)}</a>`:'<span></span>'}${next?`<a class="btn" href="#/${c.id}/${i+2}">${esc(next.label)} ›</a>`:'<span></span>'}</div>
+  <div class="fbrow"><button class="btn" type="button" data-report="${c.id}|${i}">⚑ Report a mistake on this sheet</button></div>${FOOT}</div>`;
+  wireToolbar();wireFeedback();
+  const papers=[addPaper($('#pages'),buildSheet(c,s,mode))];
+  if(await finish(papers,cur.token)){const b=$('#dlBtn');b.disabled=false;b.onclick=()=>download(`${c.code} ${s.label} ${s.title}`)}
+}
+async function summary(c,idx,title){
+  const mode=modeOf(),list=idx.map(i=>c.sheets[i]).filter(Boolean);
+  if(!list.length)return course(c);
+  const name=title||`${c.code} review`;
+  $('#app').innerHTML=`<div class="sheetview"><div class="bar"><div class="where"><div class="eyebrow"><a href="#/${c.id}">${esc(c.code)} sheets</a></div><b>${esc(name)}</b><span>${list.length} sheets + contents page · in course order</span></div>${toolbar(mode)}</div>${PDFHINT}
+  <div id="pages"><div class="loading">Putting your summary together…</div></div>${FOOT}</div>`;
+  wireToolbar();
+  const host=$('#pages');
+  const cover=document.createElement('div');cover.className='cover';cover.dataset.mode=mode;
+  cover.innerHTML=`<div class="c-eye">${esc(c.code)} · ${esc(c.name)}</div><h1>${esc(name)}</h1><p class="c-sub">${list.length} sheets, in course order. One page per sheet.</p>${c.by?`<p class="c-by">Notes by <b>${esc(c.by)}</b></p>`:''}
+   <ol>${list.map((s,k)=>`<li><span class="l">${esc(s.label)}</span><span>${esc(s.title)}</span><span class="p">${k+2}</span></li>`).join('')}</ol>
+   <p class="c-foot">${WM}</p>`;
+  const papers=[addPaper(host,cover),...list.map(s=>addPaper(host,buildSheet(c,s,mode)))];
+  if(await finish(papers,cur.token)){const b=$('#dlBtn');b.disabled=false;b.onclick=()=>download(`${c.code} ${name}`)}
+}
+function layout(){
+  document.querySelectorAll('.paper').forEach(paper=>{
+    const sc=paper.querySelector('.scaler'),el=sc.firstChild;const k=zoom?1:Math.min(1,paper.clientWidth/794);
+    sc.style.transform=k===1?'':`scale(${k})`;paper.style.height=Math.ceil(Math.min(el.offsetHeight,1123)*k)+'px';
+  });
+}
+addEventListener('resize',layout);
+addEventListener('beforeprint',()=>document.querySelectorAll('.paper').forEach(p=>p.style.height=''));
+addEventListener('afterprint',layout);
+
+/* Size the sheet body so the page fills one A4 sheet. Same rule as the Tabyeed Maker. */
+function fitSheet(el){
+  const body=el.querySelector('.sh-body');if(!body)return {k:1,fits:true};
+  const PAGE=1124;
+  const set=(k,sp=0)=>{
+    body.style.setProperty('--sp',sp+'px');
+    body.style.transformOrigin='0 0';body.style.transform=k===1?'':`scale(${k})`;
+    body.style.width=k===1?'':`${100/k}%`;body.style.marginBottom='0px';
+    const h=body.offsetHeight;body.style.marginBottom=`${-(h*(1-k))}px`;
+    if(el.offsetHeight>PAGE)return false;
+    for(const c of body.querySelectorAll('.grid>*,.card,.panel,.aside,.example,.band')){if(c.scrollWidth>c.clientWidth+1)return false}
+    return true;
+  };
+  let lo=0.6,hi=1.2,best=null;
+  if(set(1)){best=1;lo=1}else hi=1;
+  for(let i=0;i<9;i++){const mid=(lo+hi)/2;if(set(mid)){best=mid;lo=mid}else hi=mid}
+  const k=best==null?0.6:best;
+  let sp=0;
+  if(set(k,0)){let a=0,z=14;for(let i=0;i<7;i++){const m=(a+z)/2;if(set(k,m)){sp=m;a=m}else z=m}}
+  set(k,sp);
+  return {k,sp,fits:el.offsetHeight<=PAGE};
+}
+
+function render(){
+  const parts=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
+  const c=DATA.find(x=>x.id===parts[0]);
+  const key=location.hash;
+  if(!cur||cur.key!==key)scrollTo(0,0);
+  cur={key,token:Math.random()};
+  if(!c)return home();
+  if(parts[1]==='summary'){
+    const idx=(parts[2]||'').split('.').map(n=>parseInt(n,10)-1).filter(n=>n>=0);
+    let t='';try{t=decodeURIComponent(parts.slice(3).join('/'))}catch(e){}
+    return summary(c,idx,t);
+  }
+  const i=parts[1]?parseInt(parts[1],10)-1:-1;
+  if(i<0||!c.sheets[i])return course(c);
+  sheet(c,i);
+}
+addEventListener('hashchange',render);
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{if(!document.documentElement.dataset.theme)render()});
+render();
+</script>
+</body>
+</html>
